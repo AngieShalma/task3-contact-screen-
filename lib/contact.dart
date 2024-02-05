@@ -3,8 +3,8 @@
 class Contact {
   String name;
   String PhoneNumber;
-
-  Contact({required this.name,required this.PhoneNumber});
+  bool isVisible;
+  Contact({required this.name,required this.PhoneNumber,required this.isVisible});
 
 
 }
