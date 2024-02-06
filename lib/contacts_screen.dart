@@ -16,17 +16,11 @@ class _contactsScreenState extends State<contactsScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController numberController = TextEditingController();
   int index = 0;
-  //List<bool> visibility = [false, false, false];
 
-  // bool isVisible = false;
   List<Contact> contacts = [];
 
-  void addContact(index) {
-    if(index>=0&&index<3){
-    //   visibility[index] = true;
-    contacts[index].isVisible=true;
-    //
-    }
+  void addContact() {
+
 
     if (contacts.length < 3) {
       String name = nameController.text;
@@ -37,26 +31,17 @@ class _contactsScreenState extends State<contactsScreen> {
       nameController.clear();
       numberController.clear();
     }
-    // if(contacts.length > 2){
-    //   contacts.clear();
-    // }
+
   }
 
-  void deleteContact(index) {
+  void deleteContact() {
     if (contacts.isNotEmpty) {
       contacts.removeLast();
     }
-if(index>=-2&&index<=0){
-//    visibility[index+2] = false;
-    contacts[index].isVisible = false;
- }
+
 
   }
-  // void toggleContact(int index) {
-  //   setState(() {
-  //     contacts[index].isVisible = !contacts[index].isVisible;
-  //   });
-  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,28 +67,27 @@ if(index>=-2&&index<=0){
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                elevatedButton(
-                    color: Colors.blue,
-                    label: "Add",
-                    onPressed: () {
-                      //isVisible = true;
-                      addContact(index);
-                    //  print("index${index}");
-                     // print("res${visibility[index]}");
-                     index++;
-                      //print(nameController);
+                Visibility(
+                  visible:contacts.length < 3 ,
+                  child: elevatedButton(
+                      color: Colors.blue,
+                      label: "Add",
+                      onPressed: () {
+                        addContact();
 
-                      setState(() {});
-                    }),
-                elevatedButton(
-                    color: Colors.red,
-                    label: "Delete",
-                    onPressed: () {
-                      // isVisible = false;
-                      deleteContact(index);
-                      index--;
-                      setState(() {});
-                    }),
+                        setState(() {});
+                      }),
+                ),
+                Visibility(
+                  visible:contacts.isNotEmpty ,
+                  child: elevatedButton(
+                      color: Colors.red,
+                      label: "Delete",
+                      onPressed: () {
+                        deleteContact();
+                        setState(() {});
+                      }),
+                ),
               ],
             ),
             SizedBox(
@@ -112,37 +96,30 @@ if(index>=-2&&index<=0){
 
             Column(
               children: contacts.map((contact) {
-               print("before${contacts[index].isVisible}");
-                return Visibility(
-                     visible:contacts[index].isVisible ,
-                  //visible: visibility[index],
-
-                  // visible:isVisible,
-                  child: Container(
-                    height: 70,
-                    width: 320,
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(28)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Name:${contact.name}",
-                          style: TextStyle(fontSize: 18, color: Colors.black),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "Phone:${contact.PhoneNumber}",
-                          style: TextStyle(fontSize: 18, color: Colors.black),
-                        ),
-                      ],
-                    ),
-
+                return Container(
+                  height: 70,
+                  width: 320,
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(28)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Name:${contact.name}",
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Phone:${contact.PhoneNumber}",
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      ),
+                    ],
                   ),
+
                 );
 
 
