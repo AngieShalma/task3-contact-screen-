@@ -13,9 +13,11 @@ class contactsScreen extends StatefulWidget {
 }
 
 class _contactsScreenState extends State<contactsScreen> {
+  GlobalKey<FormState> _formkey =  GlobalKey<FormState>();
+
   TextEditingController nameController = TextEditingController();
   TextEditingController numberController = TextEditingController();
-  int index = 0;
+  //int index = 0;
 
   List<Contact> contacts = [];
 
@@ -25,22 +27,23 @@ class _contactsScreenState extends State<contactsScreen> {
     if (contacts.length < 3) {
       String name = nameController.text;
       String phoneNumber = numberController.text;
+
       contacts.add(Contact(
           name: nameController.text,
-          PhoneNumber: numberController.text,isVisible: false));
+          PhoneNumber: numberController.text));
+
+      setState(() {
+
+      });
+     // index++;
       nameController.clear();
       numberController.clear();
+
     }
 
   }
 
-  void deleteContact() {
-    if (contacts.isNotEmpty) {
-      contacts.removeLast();
-    }
 
-
-  }
 
 
   @override
@@ -51,87 +54,103 @@ class _contactsScreenState extends State<contactsScreen> {
         title: Text("Contacts Screen"),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            textField(
-                keyboardType: TextInputType.name,
-                controller: nameController,
-                hintText: "Enter Your Name Here",
-                icon: Icons.edit),
-            textField(
-                keyboardType: TextInputType.phone,
-                controller: numberController,
-                hintText: "Enter Your Number Here",
-                icon: Icons.phone),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Visibility(
-                  visible:contacts.length < 3 ,
-                  child: elevatedButton(
-                      color: Colors.blue,
-                      label: "Add",
-                      onPressed: () {
-                        addContact();
+      body: Form(
+        key: _formkey,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              textField(
+                  keyboardType: TextInputType.name,
+                  controller: nameController,
+                  hintText: "Enter Your Name Here",
+                  icon: Icons.edit, message: 'please enter your name',controllerTypeValue: nameController.text),
+              textField(
+                  keyboardType: TextInputType.phone,
+                  controller: numberController,
+                  hintText: "Enter Your Number Here",
+                  icon: Icons.phone, message: 'please enter your phone number',controllerTypeValue: numberController.text),
 
-                        setState(() {});
-                      }),
-                ),
-                Visibility(
-                  visible:contacts.isNotEmpty ,
-                  child: elevatedButton(
-                      color: Colors.red,
-                      label: "Delete",
-                      onPressed: () {
-                        deleteContact();
-                        setState(() {});
-                      }),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
+                  Visibility(
+                    visible:contacts.length < 3 ,
+                    child: elevatedButton(
+                        color: Colors.blue,
+                        label: "Add",
+                        onPressed: () {
+                          if (_formkey.currentState!.validate()) {
+                            addContact();
+                      print("indexlist${contacts.length}");
+                            setState(() {});
 
-            Column(
-              children: contacts.map((contact) {
-                return Container(
-                  height: 70,
-                  width: 320,
-                  margin: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(28)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Name:${contact.name}",
-                        style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Phone:${contact.PhoneNumber}",
-                        style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                    ],
+                          }
+
+
+
+                        }),
                   ),
 
-                );
+
+              SizedBox(
+                height: 10,
+              ),
+
+              Column(
+                children: contacts.map((contact) {
+                  return Container(
+                    height: 80,
+                    width: 320,
+                    padding: EdgeInsets.symmetric(horizontal: 15,vertical:5 ),
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(28)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Name:${contact.name}",
+                              style: TextStyle(fontSize: 18, color: Colors.black),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Phone:${contact.PhoneNumber}",
+                              style: TextStyle(fontSize: 18, color: Colors.black),
+                            ),
+                          ],
+                        ),
+                         Spacer(),
+                        IconButton(
+                            onPressed: (){
+
+                              if (contacts.isNotEmpty) {
+                                contacts.remove(contact);                              }
+
+                              setState(() {
+
+                              });
+                            },
+                            icon: Icon(Icons.delete,color: Colors.red,))
+                      ],
+                    ),
+
+                  );
 
 
-              }
+                }
 
-              ).toList(),
-              // [
+                ).toList(),
+                // [
 
-              // ],
+                // ],
 
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
